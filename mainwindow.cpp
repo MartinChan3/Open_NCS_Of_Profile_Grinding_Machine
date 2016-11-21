@@ -4,6 +4,7 @@
 #include <QGuiApplication>
 #include <QDebug>
 #include <QVariant>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -100,9 +101,14 @@ MainWindow::MainWindow(QWidget *parent) :
     if(trio->Open(2,0))
     {
         Label_Connection_Status->setPalette(Palette_Connected);
-        QString string;
-        trio->Dir(string);
-        qDebug()<<string;
+        Label_Connection_Status->setText(QString("已连接"));
+
+        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("123"),0,0,0,0,0,0))
+        {
+            QString string;
+            trio->Dir(string);
+            qDebug()<<string;
+        }
     }
     else
     {
