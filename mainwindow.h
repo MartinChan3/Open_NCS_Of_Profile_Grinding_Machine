@@ -38,12 +38,20 @@ private:
     void button_unpressed(QPushButton *button);
     void clear_button_text(BUTTON_GROUP_TYPE);
 
+
     TrioPCLib::TrioPC *trio;
 
 private slots:
     void pressed_mainButtonGroup(int i);
     void pressed_subButtonGroup(int i);
     void pressed_sub2ButtonGroup(int i);
+
+    void txtfile_new_built();
+    void txtfile_readin();
+    void txtfile_save();
+    void txtfile_undo();
+    void txtfile_grammar_check();
+    void txtfile_send_to_trio();
 
 };
 

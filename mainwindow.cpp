@@ -90,8 +90,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mainStack=ui->Stacked_Pages_Main;
     editStack=ui->Stacked_Pages_Sub;
     Label_Connection_Status=ui->Label_Connection_Status;
-
-
     Label_Connection_Status->setAutoFillBackground(true);
     Label_Connection_Status->setPalette(Palette_Unconnected);
 
@@ -103,11 +101,20 @@ MainWindow::MainWindow(QWidget *parent) :
         Label_Connection_Status->setPalette(Palette_Connected);
         Label_Connection_Status->setText(QString("已连接"));
 
-        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("123"),0,0,0,0,0,0))
-        {
+        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("CODE"),0,0,0,0,0,0))
+        {           
+            for (int i=0;i<100;i++)
+            {
+                trio->SetVr(1000+i,0);
+            }
+            trio->SetVr(1000,49);
+            trio->SetVr(1001,50);
+            trio->SetVr(1002,51);
+            trio->Run("STR_TEST");
+
             QString string;
             trio->Dir(string);
-            qDebug()<<string;
+            QMessageBox::about(Q_NULLPTR,"ABOUT",string);
         }
     }
     else
@@ -119,6 +126,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ButtonGroup_main,SIGNAL(buttonClicked(int)),this,SLOT(pressed_mainButtonGroup(int)));
     connect(ButtonGroup_sub,SIGNAL(buttonClicked(int)),this,SLOT(pressed_subButtonGroup(int)));
     connect(ButtonGroup_sub2,SIGNAL(buttonClicked(int)),this,SLOT(pressed_sub2ButtonGroup(int)));
+
+    connect(ui->pB_New_Txt,SIGNAL(clicked()),this,SLOT(txtfile_new_built()));
+    connect(ui->pB_Save_Txt,SIGNAL(clicked()),this,SLOT(txtfile_save()));
+    connect(ui->pB_Undo_Txt,SIGNAL(clicked()),this,SLOT(txtfile_undo()));
+    connect(ui->pB_GrammarCheck_Txt,SIGNAL(clicked()),this,SLOT(txtfile_grammar_check()));
+    connect(ui->pB_Send_Txt,SIGNAL(clicked()),this,SLOT(txtfile_send_to_trio()));
 }
 
 MainWindow::~MainWindow()
@@ -137,9 +150,7 @@ MainWindow::~MainWindow()
     {
     delete sub2Button[i];
     }
-//    delete mainButton,subButton,sub2Button;
-//    delete mainStack,editStack;
-    delete ButtonGroup_main,ButtonGroup_sub,ButtonGroup_sub2;
+
     delete ui;
 }
 
@@ -507,5 +518,35 @@ void MainWindow::clear_button_text(BUTTON_GROUP_TYPE group_type)
         button_unpressed(sub2Button[7]);
         break;
     }
+}
+
+void MainWindow::txtfile_new_built()
+{
+
+}
+
+void MainWindow::txtfile_readin()
+{
+
+}
+
+void MainWindow::txtfile_save()
+{
+
+}
+
+void MainWindow::txtfile_undo()
+{
+
+}
+
+void MainWindow::txtfile_grammar_check()
+{
+
+}
+
+void MainWindow::txtfile_send_to_trio()
+{
+
 }
 //*******************About Buttons*******************//

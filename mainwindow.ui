@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Profile Grinding Machine of SJTU</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -224,7 +224,7 @@ color: rgb(255, 255, 255);</string>
      <enum>QFrame::Box</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Page_Main">
      <widget class="QFrame" name="frame_5">
@@ -1511,7 +1511,7 @@ color: rgb(255, 255, 255);</string>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QComboBox" name="comboBox_4">
+         <widget class="QComboBox" name="cB_Txt">
           <property name="autoFillBackground">
            <bool>true</bool>
           </property>
@@ -1525,32 +1525,32 @@ color: rgb(255, 255, 255);</string>
            <number>0</number>
           </property>
          </widget>
-         <widget class="QPushButton" name="button_2_18">
+         <widget class="QPushButton" name="pB_New_Txt">
           <property name="text">
            <string>新建</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="button_2_19">
+         <widget class="QPushButton" name="pB_ReadIn_Txt">
           <property name="text">
            <string>读入</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="button_2_20">
+         <widget class="QPushButton" name="pB_Save_Txt">
           <property name="text">
            <string>保存</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="button_2_21">
+         <widget class="QPushButton" name="pB_Undo_Txt">
           <property name="text">
            <string>撤销</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="button_2_22">
+         <widget class="QPushButton" name="pB_GrammarCheck_Txt">
           <property name="text">
            <string>语法检查</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="button_2_23">
+         <widget class="QPushButton" name="pB_Send_Txt">
           <property name="text">
            <string>关闭</string>
           </property>
