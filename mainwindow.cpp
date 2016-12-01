@@ -4,6 +4,10 @@
 #include <QGuiApplication>
 #include <QDebug>
 #include <QVariant>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QStringList>
+#include <QTextStream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -89,10 +93,14 @@ MainWindow::MainWindow(QWidget *parent) :
     mainStack=ui->Stacked_Pages_Main;
     editStack=ui->Stacked_Pages_Sub;
     Label_Connection_Status=ui->Label_Connection_Status;
-
-
     Label_Connection_Status->setAutoFillBackground(true);
     Label_Connection_Status->setPalette(Palette_Unconnected);
+
+    dir_of_txt=QDir::root();
+    Connection_Status_of_Trio=false;
+
+    //Default UI setting
+    ui->Stacked_Pages_Main->setCurrentIndex(0);
 
     //Set Trio
     trio=new TrioPCLib::TrioPC();
@@ -100,25 +108,55 @@ MainWindow::MainWindow(QWidget *parent) :
     if(trio->Open(2,0))
     {
         Label_Connection_Status->setPalette(Palette_Connected);
-        QString string;
-        trio->Dir(string);
-        qDebug()<<string;
+        Label_Connection_Status->setText(QString("已连接"));
+        Connection_Status_of_Trio=true;
+
+        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("CODE"),0,0,0,0,0,0))
+        {
+
+//            for (int i=0;i<100;i++)
+//            {
+//                trio->SetVr(1000+i,0);
+//            }
+//            trio->SetVr(1000,49);
+//            trio->SetVr(1001,50);
+//            trio->SetVr(1002,51);
+//            trio->Run("STR_TEST");
+
+//            QString string;
+//            trio->Dir(string);
+//            QMessageBox::about(Q_NULLPTR,"ABOUT",string);
+        }
     }
     else
     {
         Label_Connection_Status->setPalette(Palette_Unconnected);
+        Connection_Status_of_Trio=false;
     }
 
     //Connect the signals and slots
     connect(ButtonGroup_main,SIGNAL(buttonClicked(int)),this,SLOT(pressed_mainButtonGroup(int)));
     connect(ButtonGroup_sub,SIGNAL(buttonClicked(int)),this,SLOT(pressed_subButtonGroup(int)));
     connect(ButtonGroup_sub2,SIGNAL(buttonClicked(int)),this,SLOT(pressed_sub2ButtonGroup(int)));
+
+    connect(ui->pB_New_Txt,SIGNAL(clicked()),this,SLOT(txtfile_new_built()));
+    connect(ui->pB_ReadIn_Txt,SIGNAL(clicked()),this,SLOT(txtfile_readin()));
+    connect(ui->pB_Save_Txt,SIGNAL(clicked()),this,SLOT(txtfile_save()));
+    connect(ui->pB_Undo_Txt,SIGNAL(clicked()),this,SLOT(txtfile_undo()));
+    connect(ui->pB_GrammarCheck_Txt,SIGNAL(clicked()),this,SLOT(txtfile_grammar_check()));
+    connect(ui->pB_Send_Txt,SIGNAL(clicked()),this,SLOT(txtfile_send_to_trio()));
+    connect(this,SIGNAL(cB_Txt_Changed(QString)),this,SLOT(cB_Txt_Dir_Content(QString)));
+    connect(ui->cB_Txt,SIGNAL(activated(QString)),this,SLOT(cB_current_index_changed(QString)));
+
+    connect(this,SIGNAL(errors_in_runtime(int)),this,SLOT(errors_handled(int)));
+    connect(ui->pB_Connection_of_Trio,SIGNAL(clicked()),this,SLOT(pB_Connection()));
 }
 
 MainWindow::~MainWindow()
 {
     trio->close();
 
+    delete trio;
     for(int i=0;i<=5;i++)
     {
     delete mainButton[i];
@@ -131,9 +169,7 @@ MainWindow::~MainWindow()
     {
     delete sub2Button[i];
     }
-//    delete mainButton,subButton,sub2Button;
-//    delete mainStack,editStack;
-    delete ButtonGroup_main,ButtonGroup_sub,ButtonGroup_sub2;
+
     delete ui;
 }
 
@@ -368,6 +404,121 @@ void MainWindow::pressed_sub2ButtonGroup(int i)
                 break;
             }
             break;
+        case 3:
+            switch (i) {
+            case 0:
+
+                break;
+            case 1:
+
+                break;
+            default:
+                break;
+            }
+        default:
+            break;
+        }
+
+        break;
+    case 1:
+        switch (current_ButtonID_sub) {
+        case 0:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        case 1:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        case 2:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+    case 2:
+        switch (current_ButtonID_sub) {
+        case 0:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        case 1:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        case 2:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+    case 3:
+        switch (current_ButtonID_sub) {
+        case 0:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
+        case 1:
+            switch (i) {
+            case 0:
+                break;
+            case 1:
+            {
+//                for (int i=0;i<100;i++)
+//                {
+//                    trio->SetVr(1000+i,0);
+//                }
+//                QString str="TRANSFER_FILE";
+//                for (uint i=0;i<sizeof(str);i++)
+//                {
+//                    trio->SetVr(1000+i,QString(str.at(i)).toInt());
+//                    qDebug()<<QString(str.at(i)).toInt();
+//                }
+                trio->Run("LOADTEXT");
+            }
+                break;
+            default:
+                break;
+            }
+            break;
+        case 2:
+            switch (i) {
+            case 0:
+                break;
+            default:
+                break;
+            }
+            break;
         default:
             break;
         }
@@ -502,4 +653,145 @@ void MainWindow::clear_button_text(BUTTON_GROUP_TYPE group_type)
         break;
     }
 }
+
+void MainWindow::txtfile_new_built()
+{
+
+}
+
+void MainWindow::txtfile_readin()
+{
+    QString fileDir=QFileDialog::getExistingDirectory(this,QString("请选择目录"),QString("目录为"));
+    emit cB_Txt_Changed(fileDir);
+}
+
+void MainWindow::txtfile_save()
+{
+     QString fileName_Str,txt_file_absolute_path;
+     fileName_Str=ui->cB_Txt->currentText();
+     txt_file_absolute_path=dir_of_txt.absolutePath()+"/"+fileName_Str;
+
+     QFile txt_file(txt_file_absolute_path);
+     if (!txt_file.open(QIODevice::WriteOnly|QIODevice::Text))
+     {
+         emit errors_in_runtime(2);
+         return;
+     }
+
+     QTextStream txt_stream(&txt_file);
+     txt_stream<<ui->pTE_GCode->toPlainText();
+     txt_file.close();
+}
+
+void MainWindow::txtfile_undo()
+{
+    ui->pTE_GCode->undo();
+}
+
+void MainWindow::txtfile_grammar_check()
+{
+
+}
+
+void MainWindow::txtfile_send_to_trio()
+{
+
+    QString fileName_Str,txt_file_absolute_path;
+    fileName_Str=ui->cB_Txt->currentText();
+    txt_file_absolute_path=dir_of_txt.absolutePath()+"/"+fileName_Str;
+    if(!trio->TextFileLoader(txt_file_absolute_path,0,QString("TEMP_FILE"),0,0,0,0,0,0))
+    {
+       emit errors_in_runtime(3);
+    }else
+    {
+        QString string;
+        trio->Dir(string);
+        QMessageBox::about(Q_NULLPTR,"ABOUT",string);
+    }
+}
+
+
 //*******************About Buttons*******************//
+void MainWindow::cB_Txt_Dir_Content(QString str)
+{
+    QDir dir(str);
+    if (!dir.exists())
+    {
+        emit errors_in_runtime(1);
+        return;
+    }
+
+    dir.setFilter(QDir::Files|QDir::NoSymLinks|QDir::Readable|QDir::Writable);
+    dir.setSorting(QDir::Name);
+
+    QStringList txt_Name_List=dir.entryList();
+    ui->cB_Txt->clear();
+    foreach(QString str,txt_Name_List)
+    {
+        if ((str.right(4)==".txt")|(str.right(4)==".TXT"))
+        {
+            ui->cB_Txt->addItem(str);
+        }
+    }
+    dir_of_txt=dir;
+}
+
+void MainWindow::cB_current_index_changed(QString fileName_Str)
+{
+    QString txt_file_absolute_path=dir_of_txt.absolutePath()+"/"+fileName_Str;
+    QFile txt_file(txt_file_absolute_path);
+    if (!txt_file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        emit errors_in_runtime(2);
+        return;
+    }
+
+    ui->pTE_GCode->clear();
+    QTextStream txt_stream(&txt_file);
+    const QString all_txt=txt_stream.readAll();
+    ui->pTE_GCode->setPlainText(all_txt);
+    txt_file.close();
+}
+
+
+
+void MainWindow::errors_handled(int error_type)
+{
+    QString error_title,error_content;
+    error_title=QString("发生错误");
+    error_content=QString("未知错误");
+    switch (error_type) {
+    case 1:
+        error_content=QString("选择的目录不存在！");
+        break;
+    case 2:
+        error_content=QString("选择的txt文件无法打开！");
+        break;
+    default:
+        break;
+    }
+
+    QMessageBox::warning(this,error_title,error_content);
+}
+
+void MainWindow::pB_Connection()
+{
+    if (Connection_Status_of_Trio==true)
+    {
+        return;
+    }
+
+    trio->SetHost(QString("127.0.0.1"));
+    if(trio->Open(2,0))
+    {
+        Label_Connection_Status->setPalette(Palette_Connected);
+        Label_Connection_Status->setText(QString("已连接"));
+        Connection_Status_of_Trio=true;
+    }
+    else
+    {
+        Label_Connection_Status->setPalette(Palette_Unconnected);
+        Label_Connection_Status->setText(QString("未连接"));
+        Connection_Status_of_Trio=false;
+    }
+}
