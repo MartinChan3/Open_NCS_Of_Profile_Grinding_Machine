@@ -14,9 +14,11 @@ DEFINES += DEBUG
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        trioactivex.cpp
+        trioactivex.cpp \
+    thread_ccd.cpp
 
 HEADERS  += mainwindow.h \
-            trioactivex.h
+            trioactivex.h \
+    thread_ccd.h
 
 FORMS    += mainwindow.ui

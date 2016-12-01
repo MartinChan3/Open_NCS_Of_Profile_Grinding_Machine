@@ -99,6 +99,11 @@ MainWindow::MainWindow(QWidget *parent) :
     dir_of_txt=QDir::root();
     Connection_Status_of_Trio=false;
 
+    //Initialize things about Multi-Threads
+    THREAD_CCD=new QThread();
+    ccd=new thread_CCD();
+    ccd->moveToThread(THREAD_CCD);
+
     //Default UI setting
     ui->Stacked_Pages_Main->setCurrentIndex(0);
 
@@ -163,12 +168,17 @@ MainWindow::~MainWindow()
     }
     for(int i=0;i<=4;i++)
     {
-    delete subButton[i];
+        delete subButton[i];
     }
     for(int i=0;i<=7;i++)
     {
-    delete sub2Button[i];
+        delete sub2Button[i];
     }
+
+    delete ccd;
+    THREAD_CCD->quit();
+    THREAD_CCD->wait();
+    delete THREAD_CCD;
 
     delete ui;
 }

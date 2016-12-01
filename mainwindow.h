@@ -9,7 +9,9 @@
 #include <QAxObject>
 #include <QLabel>
 #include <QDir>
+#include <QThread>
 #include "trioactivex.h"
+#include "thread_ccd.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,12 +37,15 @@ private:
     int current_ButtonID_main,current_ButtonID_sub,current_ButtonID_sub2;
     QDir dir_of_txt;
     bool Connection_Status_of_Trio;
+    QThread *THREAD_CCD;
+
 
     void button_pressed(QPushButton *button);
     void button_unpressed(QPushButton *button);
     void clear_button_text(BUTTON_GROUP_TYPE);
 
     TrioPCLib::TrioPC *trio;
+    thread_CCD *ccd;
 
 private slots:
     void errors_handled(int);
