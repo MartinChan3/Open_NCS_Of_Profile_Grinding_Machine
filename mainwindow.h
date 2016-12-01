@@ -8,8 +8,10 @@
 #include <QPalette>
 #include <QAxObject>
 #include <QLabel>
+#include <QThread>
 
 #include "trioactivex.h"
+#include "thread_ccd.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,12 +35,14 @@ private:
     QPalette Palette_Unpressed,Palette_Pressed,Palette_Unconnected,Palette_Connected;
     QLabel *Label_Connection_Status;
     int current_ButtonID_main,current_ButtonID_sub,current_ButtonID_sub2;
+    QThread *THREAD_CCD;
 
     void button_pressed(QPushButton *button);
     void button_unpressed(QPushButton *button);
     void clear_button_text(BUTTON_GROUP_TYPE);
 
     TrioPCLib::TrioPC *trio;
+    thread_CCD *ccd;
 
 private slots:
     void pressed_mainButtonGroup(int i);

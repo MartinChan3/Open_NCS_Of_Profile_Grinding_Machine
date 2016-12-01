@@ -94,6 +94,11 @@ MainWindow::MainWindow(QWidget *parent) :
     Label_Connection_Status->setAutoFillBackground(true);
     Label_Connection_Status->setPalette(Palette_Unconnected);
 
+    //Initialize things about Multi-Threads
+    THREAD_CCD=new QThread();
+    ccd=new thread_CCD();
+    ccd->moveToThread(THREAD_CCD);
+
     //Set Trio
     trio=new TrioPCLib::TrioPC();
     trio->SetHost(QString("127.0.0.1"));
@@ -131,9 +136,12 @@ MainWindow::~MainWindow()
     {
     delete sub2Button[i];
     }
-//    delete mainButton,subButton,sub2Button;
-//    delete mainStack,editStack;
-    delete ButtonGroup_main,ButtonGroup_sub,ButtonGroup_sub2;
+
+    delete ccd;
+    THREAD_CCD->quit();
+    THREAD_CCD->wait();
+    delete THREAD_CCD;
+
     delete ui;
 }
 
