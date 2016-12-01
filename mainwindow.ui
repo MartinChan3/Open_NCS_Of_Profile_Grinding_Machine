@@ -203,9 +203,9 @@ color: rgb(255, 255, 255);</string>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_connection_4">
+      <widget class="QPushButton" name="pB_Connection_of_Trio">
        <property name="text">
-        <string>Connection</string>
+        <string>连接 Trio</string>
        </property>
       </widget>
      </item>
@@ -1551,14 +1551,21 @@ color: rgb(255, 255, 255);</string>
           </property>
          </widget>
          <widget class="QPushButton" name="pB_Send_Txt">
+          <property name="font">
+           <font>
+            <family>Arial Black</family>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>关闭</string>
+           <string> 发送至 Trio</string>
           </property>
          </widget>
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit_4">
+        <widget class="QPlainTextEdit" name="pTE_GCode">
          <property name="plainText">
           <string>N10 G41 G01 X50 Z0
 N20 G01 X3.6771 Z-8.5019
