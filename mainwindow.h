@@ -13,6 +13,8 @@
 #include "trioactivex.h"
 #include "thread_ccd.h"
 
+#define IMAGE_SIZE 2448*2550
+
 namespace Ui {
 class MainWindow;
 }
@@ -49,6 +51,7 @@ private:
 
 private slots:
     void errors_handled(int);
+    void errors_of_trio_handled(int, QString, QString, QString);
 
     void pressed_mainButtonGroup(int i);
     void pressed_subButtonGroup(int i);
@@ -70,6 +73,10 @@ signals:
     void cB_Txt_Changed(QString);
     void status_Changed(int);
     void errors_in_runtime(int);
+
+    //for ccd thread
+    void initialize_ccd();
+    void capture_picture(char*);
 
 };
 

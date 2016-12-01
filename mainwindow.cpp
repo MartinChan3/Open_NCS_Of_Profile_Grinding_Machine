@@ -155,6 +155,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this,SIGNAL(errors_in_runtime(int)),this,SLOT(errors_handled(int)));
     connect(ui->pB_Connection_of_Trio,SIGNAL(clicked()),this,SLOT(pB_Connection()));
+    connect(trio, SIGNAL(exception(int, QString, QString, QString)), this, SLOT(errors_of_trio_handled(int, QString, QString, QString)));
+
 }
 
 MainWindow::~MainWindow()
@@ -782,6 +784,17 @@ void MainWindow::errors_handled(int error_type)
     }
 
     QMessageBox::warning(this,error_title,error_content);
+}
+
+void MainWindow::errors_of_trio_handled(int code, QString source, QString disc, QString help)
+{
+    QString str;
+    str.clear();
+    str.append("错误代码：").append(QString::number(code)).append("\n");
+    str.append("来源：").append(source).append("\n");
+    str.append("Disc：").append(disc).append("\n");
+    str.append("帮助：").append(help);
+    QMessageBox::warning(this,"Trio报错",str);
 }
 
 void MainWindow::pB_Connection()
