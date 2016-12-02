@@ -224,7 +224,7 @@ color: rgb(255, 255, 255);</string>
      <enum>QFrame::Box</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Page_Main">
      <widget class="QFrame" name="frame_5">

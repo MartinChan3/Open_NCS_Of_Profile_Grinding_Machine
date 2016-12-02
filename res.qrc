@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>grinder.png</file>
+    </qresource>
+</RCC>

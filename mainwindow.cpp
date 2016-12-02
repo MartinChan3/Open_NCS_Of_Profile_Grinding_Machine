@@ -8,6 +8,18 @@
 #include <QFileDialog>
 #include <QStringList>
 #include <QTextStream>
+#include <QTime>
+#include <QCoreApplication>
+
+void qSleep(int ms)
+{
+    QTime timer;
+    timer.start();
+    while (timer.elapsed()<ms)
+    {
+        QCoreApplication::processEvents();
+    }
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -104,40 +116,44 @@ MainWindow::MainWindow(QWidget *parent) :
     ccd=new thread_CCD();
     ccd->moveToThread(THREAD_CCD);
 
+    THREAD_TRIO=new QThread();
+    trio_MC664=new thread_Trio();
+    trio_MC664->moveToThread(THREAD_TRIO);
+
     //Default UI setting
     ui->Stacked_Pages_Main->setCurrentIndex(0);
 
     //Set Trio
-    trio=new TrioPCLib::TrioPC();
-    trio->SetHost(QString("127.0.0.1"));
-    if(trio->Open(2,0))
-    {
-        Label_Connection_Status->setPalette(Palette_Connected);
-        Label_Connection_Status->setText(QString("已连接"));
-        Connection_Status_of_Trio=true;
+ //   trio=new TrioPCLib::TrioPC();
+  //  trio->SetHost(QString("127.0.0.1"));
+//    if(trio->Open(2,0))
+//    {
+//        Label_Connection_Status->setPalette(Palette_Connected);
+//        Label_Connection_Status->setText(QString("已连接"));
+//        Connection_Status_of_Trio=true;
 
-        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("CODE"),0,0,0,0,0,0))
-        {
+//        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("CODE"),0,0,0,0,0,0))
+//        {
 
-//            for (int i=0;i<100;i++)
-//            {
-//                trio->SetVr(1000+i,0);
-//            }
-//            trio->SetVr(1000,49);
-//            trio->SetVr(1001,50);
-//            trio->SetVr(1002,51);
-//            trio->Run("STR_TEST");
+////            for (int i=0;i<100;i++)
+////            {
+////                trio->SetVr(1000+i,0);
+////            }
+////            trio->SetVr(1000,49);
+////            trio->SetVr(1001,50);
+////            trio->SetVr(1002,51);
+////            trio->Run("STR_TEST");
 
-//            QString string;
-//            trio->Dir(string);
-//            QMessageBox::about(Q_NULLPTR,"ABOUT",string);
-        }
-    }
-    else
-    {
-        Label_Connection_Status->setPalette(Palette_Unconnected);
-        Connection_Status_of_Trio=false;
-    }
+////            QString string;
+////            trio->Dir(string);
+////            QMessageBox::about(Q_NULLPTR,"ABOUT",string);
+//        }
+//    }
+//    else
+//    {
+//        Label_Connection_Status->setPalette(Palette_Unconnected);
+//        Connection_Status_of_Trio=false;
+//    }
 
     //Connect the signals and slots
     connect(ButtonGroup_main,SIGNAL(buttonClicked(int)),this,SLOT(pressed_mainButtonGroup(int)));
@@ -155,15 +171,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this,SIGNAL(errors_in_runtime(int)),this,SLOT(errors_handled(int)));
     connect(ui->pB_Connection_of_Trio,SIGNAL(clicked()),this,SLOT(pB_Connection()));
-    connect(trio, SIGNAL(exception(int, QString, QString, QString)), this, SLOT(errors_of_trio_handled(int, QString, QString, QString)));
 
+
+    connect(THREAD_CCD,SIGNAL(finished()),ccd,SLOT(deleteLater()));
+    connect(THREAD_TRIO,SIGNAL(finished()),trio_MC664,SLOT(deleteLater()));
+    connect(trio_MC664,SIGNAL(return_error_of_trio(int,QString,QString,QString)),
+            this,SLOT(errors_of_trio_handled(int,QString,QString,QString)));
+    connect(this,SIGNAL(call_Trio_connect(bool*)),trio_MC664,SLOT(connect_Trio(bool*)));
+    connect(this,SIGNAL(call_Trio_run_program(bool*,QString)),trio_MC664,SLOT(run_program_of_Trio(bool*,QString)));
+    connect(this,SIGNAL(call_Trio_send_txt(bool*,QString,QString)),
+            trio_MC664,SLOT(send_txt_to_Trio(bool*,QString,QString)));
+
+    THREAD_CCD->start();
+    THREAD_TRIO->start();
 }
 
 MainWindow::~MainWindow()
 {
-    trio->close();
-
-    delete trio;
     for(int i=0;i<=5;i++)
     {
     delete mainButton[i];
@@ -181,6 +205,11 @@ MainWindow::~MainWindow()
     THREAD_CCD->quit();
     THREAD_CCD->wait();
     delete THREAD_CCD;
+
+    delete trio_MC664;
+    THREAD_TRIO->quit();
+    THREAD_TRIO->wait();
+    delete THREAD_TRIO;
 
     delete ui;
 }
@@ -506,17 +535,8 @@ void MainWindow::pressed_sub2ButtonGroup(int i)
                 break;
             case 1:
             {
-//                for (int i=0;i<100;i++)
-//                {
-//                    trio->SetVr(1000+i,0);
-//                }
-//                QString str="TRANSFER_FILE";
-//                for (uint i=0;i<sizeof(str);i++)
-//                {
-//                    trio->SetVr(1000+i,QString(str.at(i)).toInt());
-//                    qDebug()<<QString(str.at(i)).toInt();
-//                }
-                trio->Run("LOADTEXT");
+                bool ok(false);
+                emit call_Trio_run_program(&ok,"LOADTEXT");
             }
                 break;
             default:
@@ -708,18 +728,21 @@ void MainWindow::txtfile_grammar_check()
 void MainWindow::txtfile_send_to_trio()
 {
 
-    QString fileName_Str,txt_file_absolute_path;
+    QString fileName_Str,txt_file_absolute_path,destination_path;
     fileName_Str=ui->cB_Txt->currentText();
     txt_file_absolute_path=dir_of_txt.absolutePath()+"/"+fileName_Str;
-    if(!trio->TextFileLoader(txt_file_absolute_path,0,QString("TEMP_FILE"),0,0,0,0,0,0))
-    {
-       emit errors_in_runtime(3);
-    }else
-    {
-        QString string;
-        trio->Dir(string);
-        QMessageBox::about(Q_NULLPTR,"ABOUT",string);
-    }
+    destination_path="GCode";
+    bool ok(false);
+    emit call_Trio_send_txt(&ok,txt_file_absolute_path,destination_path);
+//    if(!trio->TextFileLoader(txt_file_absolute_path,0,QString("TEMP_FILE"),0,0,0,0,0,0))
+//    {
+//       emit errors_in_runtime(3);
+//    }else
+//    {
+//        QString string;
+//        trio->Dir(string);
+//        QMessageBox::about(Q_NULLPTR,"ABOUT",string);
+//    }
 }
 
 
@@ -799,22 +822,19 @@ void MainWindow::errors_of_trio_handled(int code, QString source, QString disc, 
 
 void MainWindow::pB_Connection()
 {
-    if (Connection_Status_of_Trio==true)
-    {
-        return;
-    }
-
-    trio->SetHost(QString("127.0.0.1"));
-    if(trio->Open(2,0))
-    {
-        Label_Connection_Status->setPalette(Palette_Connected);
-        Label_Connection_Status->setText(QString("已连接"));
-        Connection_Status_of_Trio=true;
-    }
-    else
-    {
-        Label_Connection_Status->setPalette(Palette_Unconnected);
-        Label_Connection_Status->setText(QString("未连接"));
-        Connection_Status_of_Trio=false;
-    }
+     bool ok(false);
+     emit call_Trio_connect(&ok);
+     qSleep(10);
+     if(ok)
+     {
+         Label_Connection_Status->setPalette(Palette_Connected);
+         Label_Connection_Status->setText(QString("已连接"));
+         Connection_Status_of_Trio=true;
+     }
+     else
+     {
+         Label_Connection_Status->setPalette(Palette_Unconnected);
+         Label_Connection_Status->setText(QString("未连接"));
+         Connection_Status_of_Trio=false;
+     }
 }

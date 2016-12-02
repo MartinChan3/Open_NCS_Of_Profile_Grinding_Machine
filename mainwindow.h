@@ -12,7 +12,7 @@
 #include <QThread>
 #include "trioactivex.h"
 #include "thread_ccd.h"
-
+#include "thread_trio.h"
 #define IMAGE_SIZE 2448*2550
 
 namespace Ui {
@@ -39,15 +39,15 @@ private:
     int current_ButtonID_main,current_ButtonID_sub,current_ButtonID_sub2;
     QDir dir_of_txt;
     bool Connection_Status_of_Trio;
-    QThread *THREAD_CCD;
-
 
     void button_pressed(QPushButton *button);
     void button_unpressed(QPushButton *button);
     void clear_button_text(BUTTON_GROUP_TYPE);
 
-    TrioPCLib::TrioPC *trio;
+//    TrioPCLib::TrioPC *trio;
     thread_CCD *ccd;
+    thread_Trio *trio_MC664;
+    QThread *THREAD_CCD,*THREAD_TRIO;
 
 private slots:
     void errors_handled(int);
@@ -69,6 +69,9 @@ private slots:
 
     void pB_Connection();
 
+    //Receive from multi-threads
+
+
 signals:
     void cB_Txt_Changed(QString);
     void status_Changed(int);
@@ -78,6 +81,10 @@ signals:
     void initialize_ccd();
     void capture_picture(char*);
 
+    //for trio thread
+    void call_Trio_connect(bool*);
+    void call_Trio_send_txt(bool*,const QString,const QString);
+    void call_Trio_run_program(bool*,QString);
 };
 
 #endif // MAINWINDOW_H
