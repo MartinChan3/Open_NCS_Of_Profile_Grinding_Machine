@@ -15,10 +15,15 @@ DEFINES += DEBUG
 SOURCES += main.cpp\
         mainwindow.cpp \
         trioactivex.cpp \
-    thread_ccd.cpp
+    thread_ccd.cpp \
+    thread_trio.cpp
 
 HEADERS  += mainwindow.h \
             trioactivex.h \
-    thread_ccd.h
+    thread_ccd.h \
+    thread_trio.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    res.qrc

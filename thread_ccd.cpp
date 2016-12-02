@@ -5,6 +5,11 @@ thread_CCD::thread_CCD(QObject *parent) : QObject(parent)
 
 }
 
+thread_CCD::~thread_CCD()
+{
+
+}
+
 thread_CCD::initialize()
 {
 
