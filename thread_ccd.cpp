@@ -10,12 +10,13 @@ thread_CCD::~thread_CCD()
 
 }
 
-thread_CCD::initialize()
+void thread_CCD::initialize()
 {
 
 }
 
-thread_CCD::capture_image(char *)
+
+void thread_CCD::capture_image(char *)
 {
 
 }

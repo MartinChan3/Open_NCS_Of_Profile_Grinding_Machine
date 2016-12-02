@@ -39,7 +39,9 @@ private:
     int current_ButtonID_main,current_ButtonID_sub,current_ButtonID_sub2;
     QDir dir_of_txt;
     bool Connection_Status_of_Trio;
+    double Axis_Paras[5];
 
+    void qSleep(int ms);
     void button_pressed(QPushButton *button);
     void button_unpressed(QPushButton *button);
     void clear_button_text(BUTTON_GROUP_TYPE);
@@ -70,7 +72,7 @@ private slots:
     void pB_Connection();
 
     //Receive from multi-threads
-
+    void receive_Trio_axis_paras(double*);
 
 signals:
     void cB_Txt_Changed(QString);
@@ -85,6 +87,7 @@ signals:
     void call_Trio_connect(bool*);
     void call_Trio_send_txt(bool*,const QString,const QString);
     void call_Trio_run_program(bool*,QString);
+    void call_Trio_return_axis_paras(bool*,double*);
 };
 
 #endif // MAINWINDOW_H

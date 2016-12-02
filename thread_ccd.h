@@ -9,10 +9,11 @@ public:
     explicit thread_CCD(QObject *parent = 0);
     ~thread_CCD();
 signals:
-    image_captured(bool);
+    void image_captured(bool);
+
 public slots:
-    initialize();
-    capture_image(char*);
+    void initialize();
+    void capture_image(char*);
 };
 
 #endif // THREAD_CCD_H

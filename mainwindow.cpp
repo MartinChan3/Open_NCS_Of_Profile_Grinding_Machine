@@ -11,16 +11,6 @@
 #include <QTime>
 #include <QCoreApplication>
 
-void qSleep(int ms)
-{
-    QTime timer;
-    timer.start();
-    while (timer.elapsed()<ms)
-    {
-        QCoreApplication::processEvents();
-    }
-}
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -111,6 +101,11 @@ MainWindow::MainWindow(QWidget *parent) :
     dir_of_txt=QDir::root();
     Connection_Status_of_Trio=false;
 
+    for (int i=0;i<5;i++)
+    {
+        Axis_Paras[i]=0;
+    }
+
     //Initialize things about Multi-Threads
     THREAD_CCD=new QThread();
     ccd=new thread_CCD();
@@ -122,38 +117,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Default UI setting
     ui->Stacked_Pages_Main->setCurrentIndex(0);
-
-    //Set Trio
- //   trio=new TrioPCLib::TrioPC();
-  //  trio->SetHost(QString("127.0.0.1"));
-//    if(trio->Open(2,0))
-//    {
-//        Label_Connection_Status->setPalette(Palette_Connected);
-//        Label_Connection_Status->setText(QString("已连接"));
-//        Connection_Status_of_Trio=true;
-
-//        if(trio->TextFileLoader(QString("D:/code.txt"),0,QString("CODE"),0,0,0,0,0,0))
-//        {
-
-////            for (int i=0;i<100;i++)
-////            {
-////                trio->SetVr(1000+i,0);
-////            }
-////            trio->SetVr(1000,49);
-////            trio->SetVr(1001,50);
-////            trio->SetVr(1002,51);
-////            trio->Run("STR_TEST");
-
-////            QString string;
-////            trio->Dir(string);
-////            QMessageBox::about(Q_NULLPTR,"ABOUT",string);
-//        }
-//    }
-//    else
-//    {
-//        Label_Connection_Status->setPalette(Palette_Unconnected);
-//        Connection_Status_of_Trio=false;
-//    }
 
     //Connect the signals and slots
     connect(ButtonGroup_main,SIGNAL(buttonClicked(int)),this,SLOT(pressed_mainButtonGroup(int)));
@@ -181,6 +144,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(call_Trio_run_program(bool*,QString)),trio_MC664,SLOT(run_program_of_Trio(bool*,QString)));
     connect(this,SIGNAL(call_Trio_send_txt(bool*,QString,QString)),
             trio_MC664,SLOT(send_txt_to_Trio(bool*,QString,QString)));
+    connect(trio_MC664,SIGNAL(return_axis_paras(double*)),this,SLOT(receive_Trio_axis_paras(double*)));
 
     THREAD_CCD->start();
     THREAD_TRIO->start();
@@ -212,6 +176,11 @@ MainWindow::~MainWindow()
     delete THREAD_TRIO;
 
     delete ui;
+}
+
+void MainWindow::qSleep(int ms)
+{
+    common::qSleep(ms);
 }
 
 //*******************About Buttons*******************//
@@ -824,7 +793,7 @@ void MainWindow::pB_Connection()
 {
      bool ok(false);
      emit call_Trio_connect(&ok);
-     qSleep(10);
+     qSleep(200);
      if(ok)
      {
          Label_Connection_Status->setPalette(Palette_Connected);
@@ -837,4 +806,16 @@ void MainWindow::pB_Connection()
          Label_Connection_Status->setText(QString("未连接"));
          Connection_Status_of_Trio=false;
      }
+}
+
+void MainWindow::receive_Trio_axis_paras(double* axis_position)
+{
+
+    ui->Label_Mech_Cor_X->setText(QString::number(axis_position[1],'g',5));
+    ui->Label_Mech_Cor_Y->setText(QString::number(axis_position[3],'g',5));
+    ui->Label_Mech_Cor_U->setText(QString::number(axis_position[0],'g',5));
+    ui->Label_Mech_Cor_V->setText(QString::number(axis_position[0],'g',5));
+    ui->Label_Mech_Cor_Z->setText(QString::number(axis_position[0],'g',5));
+
+    delete axis_position;
 }
