@@ -17,13 +17,15 @@ SOURCES += main.cpp\
         trioactivex.cpp \
     thread_ccd.cpp \
     thread_trio.cpp \
-    common.cpp
+    common.cpp \
+    thread_assist.cpp
 
 HEADERS  += mainwindow.h \
             trioactivex.h \
     thread_ccd.h \
     thread_trio.h \
-    common.h
+    common.h \
+    thread_assist.h
 
 FORMS    += mainwindow.ui
 

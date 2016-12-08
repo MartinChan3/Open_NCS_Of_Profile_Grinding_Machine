@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>grinder.png</file>
+        <file>machine_tool_ico.ico</file>
+        <file>school_badge.png</file>
     </qresource>
 </RCC>

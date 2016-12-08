@@ -575,12 +575,12 @@ color: rgb(255, 255, 255);</string>
         <string>Time：</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_date_4">
+      <widget class="QLabel" name="Label_date">
        <property name="geometry">
         <rect>
          <x>103</x>
          <y>11</y>
-         <width>62</width>
+         <width>201</width>
          <height>16</height>
         </rect>
        </property>
@@ -596,29 +596,6 @@ color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
         <string>2000.01.01</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_time_4">
-       <property name="geometry">
-        <rect>
-         <x>184</x>
-         <y>11</y>
-         <width>71</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(0, 255, 0);</string>
-       </property>
-       <property name="text">
-        <string>00:00:00</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_177">
@@ -715,13 +692,13 @@ color: rgb(255, 255, 255);</string>
        <attribute name="title">
         <string>机械坐标</string>
        </attribute>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>90</x>
           <y>0</y>
           <width>157</width>
-          <height>121</height>
+          <height>167</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">

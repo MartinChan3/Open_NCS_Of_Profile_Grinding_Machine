@@ -10,12 +10,14 @@
 #include <QTextStream>
 #include <QTime>
 #include <QCoreApplication>
+#include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/machine_tool_ico.ico"));
 
     //Initialize the widgets of UI
     mainButton[0]=ui->pB_data;
@@ -101,11 +103,6 @@ MainWindow::MainWindow(QWidget *parent) :
     dir_of_txt=QDir::root();
     Connection_Status_of_Trio=false;
 
-    for (int i=0;i<5;i++)
-    {
-        Axis_Paras[i]=0;
-    }
-
     //Initialize things about Multi-Threads
     THREAD_CCD=new QThread();
     ccd=new thread_CCD();
@@ -114,6 +111,11 @@ MainWindow::MainWindow(QWidget *parent) :
     THREAD_TRIO=new QThread();
     trio_MC664=new thread_Trio();
     trio_MC664->moveToThread(THREAD_TRIO);
+
+    THREAD_ASSIST=new QThread();
+    Assist=new thread_assist();
+    Assist->moveToThread(THREAD_ASSIST);
+
 
     //Default UI setting
     ui->Stacked_Pages_Main->setCurrentIndex(0);
@@ -138,6 +140,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(THREAD_CCD,SIGNAL(finished()),ccd,SLOT(deleteLater()));
     connect(THREAD_TRIO,SIGNAL(finished()),trio_MC664,SLOT(deleteLater()));
+    connect(THREAD_ASSIST,SIGNAL(finished()),Assist,SLOT(deleteLater()));
+
     connect(trio_MC664,SIGNAL(return_error_of_trio(int,QString,QString,QString)),
             this,SLOT(errors_of_trio_handled(int,QString,QString,QString)));
     connect(this,SIGNAL(call_Trio_connect(bool*)),trio_MC664,SLOT(connect_Trio(bool*)));
@@ -146,8 +150,16 @@ MainWindow::MainWindow(QWidget *parent) :
             trio_MC664,SLOT(send_txt_to_Trio(bool*,QString,QString)));
     connect(trio_MC664,SIGNAL(return_axis_paras(double*)),this,SLOT(receive_Trio_axis_paras(double*)));
 
+    connect(Assist,SIGNAL(return_current_time_str(QString*)),this,SLOT(receive_current_time(QString*)));
+    connect(this,SIGNAL(call_start_time_loop()),Assist,SLOT(send_current_Time()));
+    connect(this,SIGNAL(call_stop_time_loop()),Assist,SLOT(receive_time_loop_stop_flag()));
+
     THREAD_CCD->start();
     THREAD_TRIO->start();
+    THREAD_ASSIST->start();
+
+    emit call_start_time_loop();
+//   Assist->send_current_Time();
 }
 
 MainWindow::~MainWindow()
@@ -174,6 +186,12 @@ MainWindow::~MainWindow()
     THREAD_TRIO->quit();
     THREAD_TRIO->wait();
     delete THREAD_TRIO;
+
+    emit call_stop_time_loop();
+    delete Assist;
+    THREAD_ASSIST->quit();
+    THREAD_ASSIST->wait();
+    delete THREAD_ASSIST;
 
     delete ui;
 }
@@ -818,4 +836,10 @@ void MainWindow::receive_Trio_axis_paras(double* axis_position)
     ui->Label_Mech_Cor_Z->setText(QString::number(axis_position[0],'g',5));
 
     delete axis_position;
+}
+
+void MainWindow::receive_current_time(QString *str)
+{
+    ui->Label_date->setText(*str);
+    delete str;
 }
