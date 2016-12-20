@@ -47,7 +47,7 @@ private:
     void button_unpressed(QPushButton *button);
     void clear_button_text(BUTTON_GROUP_TYPE);
 
-//  Multi-threads stuff
+    //  Multi-threads stuff
     thread_CCD *ccd;
     thread_Trio *trio_MC664;
     thread_assist *Assist;
@@ -78,6 +78,10 @@ private slots:
 
     void receive_current_time(QString*);
 
+    void receive_captured_image(uchar*);
+
+    void on_rB_CCD_toggled(bool checked);
+
 signals:
     void cB_Txt_Changed(QString);
     void status_Changed(int);
@@ -85,7 +89,8 @@ signals:
 
     //for ccd thread
     void initialize_ccd();
-    void capture_picture(char*);
+    void capture_picture();
+    void stop_ccd();
 
     //for trio thread
     void call_Trio_connect(bool*);

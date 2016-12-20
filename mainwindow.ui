@@ -179,7 +179,7 @@ color: rgb(255, 255, 255);</string>
         <enum>QFrame::Raised</enum>
        </property>
        <property name="text">
-        <string>上海交通大学：高精度曲线磨床</string>
+        <string>复杂轮廓曲线磨学数控系统HMI</string>
        </property>
        <property name="textFormat">
         <enum>Qt::PlainText</enum>
@@ -206,6 +206,13 @@ color: rgb(255, 255, 255);</string>
       <widget class="QPushButton" name="pB_Connection_of_Trio">
        <property name="text">
         <string>连接 Trio</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rB_CCD">
+       <property name="text">
+        <string>  摄像头打开</string>
        </property>
       </widget>
      </item>
@@ -557,7 +564,7 @@ color: rgb(255, 255, 255);</string>
         <rect>
          <x>21</x>
          <y>11</y>
-         <width>38</width>
+         <width>51</width>
          <height>16</height>
         </rect>
        </property>
@@ -572,7 +579,7 @@ color: rgb(255, 255, 255);</string>
         <string notr="true">color: rgb(0, 255, 0);</string>
        </property>
        <property name="text">
-        <string>Time：</string>
+        <string> 时间：</string>
        </property>
       </widget>
       <widget class="QLabel" name="Label_date">
@@ -644,25 +651,6 @@ color: rgb(255, 255, 255);</string>
         <string>10</string>
        </property>
       </widget>
-     </widget>
-     <widget class="QGraphicsView" name="graphicsView_7">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>10</y>
-        <width>381</width>
-        <height>281</height>
-       </rect>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>500</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-image: url(:/grinder.png);</string>
-      </property>
      </widget>
      <widget class="QTabWidget" name="tabWidget_4">
       <property name="geometry">
@@ -1470,6 +1458,26 @@ color: rgb(255, 255, 255);</string>
       <widget class="QWidget" name="Page_Sub_F_Order"/>
       <widget class="QWidget" name="Page_Sub"/>
      </widget>
+     <widget class="QLabel" name="Label_Img">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>361</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="res.qrc">:/grinder.png</pixmap>
+      </property>
+     </widget>
+     <zorder>Label_Img</zorder>
+     <zorder>frame_5</zorder>
+     <zorder>tabWidget_4</zorder>
+     <zorder>Stacked_Pages_Sub</zorder>
     </widget>
     <widget class="QWidget" name="Page_Txt">
      <widget class="QWidget" name="layoutWidget_13">
@@ -1535,7 +1543,7 @@ color: rgb(255, 255, 255);</string>
            </font>
           </property>
           <property name="text">
-           <string> 发送至 Trio</string>
+           <string>下载</string>
           </property>
          </widget>
         </widget>
@@ -1813,6 +1821,8 @@ N40 G03 X12.7442 Z-30.1882 I17.9228 K8.8755</string>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

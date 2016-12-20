@@ -71,7 +71,7 @@ void thread_Trio::run_program_of_Trio(bool *ok, QString program_name)
         emit return_axis_paras(axis_position_paras);
         if(first_time_delay)
         {
-            qSleep(1000);
+            qSleep(800);
             first_time_delay=false;
         }
         trio->GetAxisVariable(QString("MTYPE"),1,MTYPE_x);

@@ -11,6 +11,8 @@
 #include <QTime>
 #include <QCoreApplication>
 #include <QIcon>
+#include <QPixmap>
+#include <QImage>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -67,15 +69,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ButtonGroup_sub2->addButton(sub2Button[7],7);
     for(int i=0;i<5;i++)
     {
-    mainButton[i]->setAutoFillBackground(true);
+        mainButton[i]->setAutoFillBackground(true);
     }
     for(int i=0;i<4;i++)
     {
-    subButton[i]->setAutoFillBackground(true);
+        subButton[i]->setAutoFillBackground(true);
     }
     for(int i=0;i<7;i++)
     {
-    sub2Button[i]->setAutoFillBackground(true);
+        sub2Button[i]->setAutoFillBackground(true);
     }
 
     this->setAutoFillBackground(true);
@@ -142,6 +144,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(THREAD_TRIO,SIGNAL(finished()),trio_MC664,SLOT(deleteLater()));
     connect(THREAD_ASSIST,SIGNAL(finished()),Assist,SLOT(deleteLater()));
 
+    connect(this,SIGNAL(initialize_ccd()),ccd,SLOT(initialize()));
+    connect(this,SIGNAL(capture_picture()),ccd,SLOT(capture_image()));
+    connect(ccd,SIGNAL(image_captured(uchar*)),this,SLOT(receive_captured_image(uchar*)));
+    connect(this,SIGNAL(stop_ccd()),ccd,SLOT(set_output_img()));
+
     connect(trio_MC664,SIGNAL(return_error_of_trio(int,QString,QString,QString)),
             this,SLOT(errors_of_trio_handled(int,QString,QString,QString)));
     connect(this,SIGNAL(call_Trio_connect(bool*)),trio_MC664,SLOT(connect_Trio(bool*)));
@@ -158,15 +165,17 @@ MainWindow::MainWindow(QWidget *parent) :
     THREAD_TRIO->start();
     THREAD_ASSIST->start();
 
+    //开始辅助线程，当前时间信号重复发送
     emit call_start_time_loop();
-//   Assist->send_current_Time();
 }
 
 MainWindow::~MainWindow()
 {
+    emit stop_ccd();
+
     for(int i=0;i<=5;i++)
     {
-    delete mainButton[i];
+        delete mainButton[i];
     }
     for(int i=0;i<=4;i++)
     {
@@ -686,20 +695,20 @@ void MainWindow::txtfile_readin()
 
 void MainWindow::txtfile_save()
 {
-     QString fileName_Str,txt_file_absolute_path;
-     fileName_Str=ui->cB_Txt->currentText();
-     txt_file_absolute_path=dir_of_txt.absolutePath()+"/"+fileName_Str;
+    QString fileName_Str,txt_file_absolute_path;
+    fileName_Str=ui->cB_Txt->currentText();
+    txt_file_absolute_path=dir_of_txt.absolutePath()+"/"+fileName_Str;
 
-     QFile txt_file(txt_file_absolute_path);
-     if (!txt_file.open(QIODevice::WriteOnly|QIODevice::Text))
-     {
-         emit errors_in_runtime(2);
-         return;
-     }
+    QFile txt_file(txt_file_absolute_path);
+    if (!txt_file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        emit errors_in_runtime(2);
+        return;
+    }
 
-     QTextStream txt_stream(&txt_file);
-     txt_stream<<ui->pTE_GCode->toPlainText();
-     txt_file.close();
+    QTextStream txt_stream(&txt_file);
+    txt_stream<<ui->pTE_GCode->toPlainText();
+    txt_file.close();
 }
 
 void MainWindow::txtfile_undo()
@@ -721,15 +730,15 @@ void MainWindow::txtfile_send_to_trio()
     destination_path="GCode";
     bool ok(false);
     emit call_Trio_send_txt(&ok,txt_file_absolute_path,destination_path);
-//    if(!trio->TextFileLoader(txt_file_absolute_path,0,QString("TEMP_FILE"),0,0,0,0,0,0))
-//    {
-//       emit errors_in_runtime(3);
-//    }else
-//    {
-//        QString string;
-//        trio->Dir(string);
-//        QMessageBox::about(Q_NULLPTR,"ABOUT",string);
-//    }
+    //    if(!trio->TextFileLoader(txt_file_absolute_path,0,QString("TEMP_FILE"),0,0,0,0,0,0))
+    //    {
+    //       emit errors_in_runtime(3);
+    //    }else
+    //    {
+    //        QString string;
+    //        trio->Dir(string);
+    //        QMessageBox::about(Q_NULLPTR,"ABOUT",string);
+    //    }
 }
 
 
@@ -809,21 +818,21 @@ void MainWindow::errors_of_trio_handled(int code, QString source, QString disc, 
 
 void MainWindow::pB_Connection()
 {
-     bool ok(false);
-     emit call_Trio_connect(&ok);
-     qSleep(200);
-     if(ok)
-     {
-         Label_Connection_Status->setPalette(Palette_Connected);
-         Label_Connection_Status->setText(QString("已连接"));
-         Connection_Status_of_Trio=true;
-     }
-     else
-     {
-         Label_Connection_Status->setPalette(Palette_Unconnected);
-         Label_Connection_Status->setText(QString("未连接"));
-         Connection_Status_of_Trio=false;
-     }
+    bool ok(false);
+    emit call_Trio_connect(&ok);
+    qSleep(200);
+    if(ok)
+    {
+        Label_Connection_Status->setPalette(Palette_Connected);
+        Label_Connection_Status->setText(QString("已连接"));
+        Connection_Status_of_Trio=true;
+    }
+    else
+    {
+        Label_Connection_Status->setPalette(Palette_Unconnected);
+        Label_Connection_Status->setText(QString("未连接"));
+        Connection_Status_of_Trio=false;
+    }
 }
 
 void MainWindow::receive_Trio_axis_paras(double* axis_position)
@@ -835,11 +844,25 @@ void MainWindow::receive_Trio_axis_paras(double* axis_position)
     ui->Label_Mech_Cor_V->setText(QString::number(axis_position[0],'g',5));
     ui->Label_Mech_Cor_Z->setText(QString::number(axis_position[0],'g',5));
 
-    delete axis_position;
+    delete []axis_position;
 }
 
 void MainWindow::receive_current_time(QString *str)
 {
     ui->Label_date->setText(*str);
     delete str;
+}
+
+void MainWindow::receive_captured_image(uchar* img_data)
+{
+    QImage img=QImage(img_data,2448,2058,QImage::Format_Indexed8);
+    ui->Label_Img->setPixmap(QPixmap::fromImage(img));
+    qDebug()<<"A img received";
+    delete []img_data;
+}
+
+void MainWindow::on_rB_CCD_toggled(bool checked)
+{
+    if(checked)
+        emit initialize_ccd();
 }

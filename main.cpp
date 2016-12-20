@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QSplashScreen>
 #include <QPixmap>
+#include "common.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
     screen.show();
     a.processEvents();
     screen.showMessage(QString("曲线磨床数控系统"));
+
+    common::qSleep(2000);
 
     MainWindow w;
     w.show();

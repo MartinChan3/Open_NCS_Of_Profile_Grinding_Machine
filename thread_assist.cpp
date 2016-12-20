@@ -15,7 +15,8 @@ void thread_assist::send_current_Time()
     while(start_time_sending_loop)
     {
         QString* str=new QString();
-        *str=QDateTime::currentDateTime().toString(QString("yyyy MM dd hh:mm:ss"));
+        QDateTime current_one=QDateTime::currentDateTime();
+        *str=current_one.toString(QString("yyyy MM dd hh:mm:ss"));
 
         emit return_current_time_str(str);
         qSleep(1000);

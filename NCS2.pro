@@ -31,3 +31,13 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     res.qrc
+
+win32: LIBS += -L$$PWD/'../../../../../Program Files (x86)/Mvision/Mvision SDK/Mvision SDK/lib/' -lMvCameraControl
+
+INCLUDEPATH += $$PWD/'../../../../../Program Files (x86)/Mvision/Mvision SDK/Mvision SDK/inc'
+DEPENDPATH += $$PWD/'../../../../../Program Files (x86)/Mvision/Mvision SDK/Mvision SDK/inc'
+
+win32: LIBS += -L$$PWD/'../../../../../Program Files/GenICam_v2_4/library/CPP/lib/Win32_i86/' -lGenApi_MD_VC80_v2_4
+
+INCLUDEPATH += $$PWD/'../../../../../Program Files/GenICam_v2_4/library/CPP/include'
+DEPENDPATH += $$PWD/'../../../../../Program Files/GenICam_v2_4/library/CPP/include'
