@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QSplashScreen screen(pixmap);
     screen.show();
     a.processEvents();
-    screen.showMessage(QString("曲线磨床数控系统"));
+    screen.showMessage(QString::fromLocal8Bit("曲线磨床数控系统"));
 
     common::qSleep(2000);
 

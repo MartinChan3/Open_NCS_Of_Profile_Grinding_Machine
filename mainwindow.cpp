@@ -223,30 +223,30 @@ void MainWindow::pressed_mainButtonGroup(int i)
     clear_button_text(ALL_SUB);
     switch (i) {
     case 0:
-        subButton[0]->setText(QString("工具"));
-        subButton[1]->setText(QString("其它"));
+        subButton[0]->setText(QString::fromLocal8Bit("工具"));
+        subButton[1]->setText(QString::fromLocal8Bit("其它"));
         break;
     case 1:
-        subButton[0]->setText(QString("准备"));
-        subButton[1]->setText(QString("MDI"));
-        subButton[2]->setText(QString("示教"));
+        subButton[0]->setText(QString::fromLocal8Bit("准备"));
+        subButton[1]->setText(QString::fromLocal8Bit("MDI"));
+        subButton[2]->setText(QString::fromLocal8Bit("示教"));
         break;
     case 2:
-        subButton[0]->setText(QString("文件"));
-        subButton[1]->setText(QString("图形"));
-        subButton[2]->setText(QString("凸轮"));
+        subButton[0]->setText(QString::fromLocal8Bit("文件"));
+        subButton[1]->setText(QString::fromLocal8Bit("图形"));
+        subButton[2]->setText(QString::fromLocal8Bit("凸轮"));
         mainStack->setCurrentIndex(1);
         break;
     case 3:
-        subButton[0]->setText(QString("文件"));
-        subButton[1]->setText(QString("执行"));
-        subButton[2]->setText(QString("模拟"));
+        subButton[0]->setText(QString::fromLocal8Bit("文件"));
+        subButton[1]->setText(QString::fromLocal8Bit("执行"));
+        subButton[2]->setText(QString::fromLocal8Bit("模拟"));
         break;
     case 4:
-        subButton[0]->setText(QString("CCD"));
-        subButton[1]->setText(QString("坐标"));
-        subButton[2]->setText(QString("维护"));
-        subButton[3]->setText(QString("View"));
+        subButton[0]->setText(QString::fromLocal8Bit("CCD"));
+        subButton[1]->setText(QString::fromLocal8Bit("坐标"));
+        subButton[2]->setText(QString::fromLocal8Bit("维护"));
+        subButton[3]->setText(QString::fromLocal8Bit("View"));
         break;
     case 5:
 
@@ -275,13 +275,13 @@ void MainWindow::pressed_subButtonGroup(int i)
         switch(i)
         {
         case 0:
-            sub2Button[0]->setText(QString("刀具库"));
-            sub2Button[1]->setText(QString("上偏差"));
-            sub2Button[2]->setText(QString("下偏差"));
-            sub2Button[3]->setText(QString("补偿量"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("刀具库"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("上偏差"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("下偏差"));
+            sub2Button[3]->setText(QString::fromLocal8Bit("补偿量"));
             break;
         case 1:
-            sub2Button[0]->setText(QString("零点偏置"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("零点偏置"));
             break;
         default:
 
@@ -292,24 +292,24 @@ void MainWindow::pressed_subButtonGroup(int i)
         switch(i)
         {
         case 0:
-            sub2Button[0]->setText(QString("原点复归"));
-            sub2Button[1]->setText(QString("坐标设定"));
-            sub2Button[2]->setText(QString("绝对移动"));
-            sub2Button[3]->setText(QString("相对移动"));
-            sub2Button[4]->setText(QString("M指令"));
-            sub2Button[5]->setText(QString("F指令"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("原点复归"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("坐标设定"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("绝对移动"));
+            sub2Button[3]->setText(QString::fromLocal8Bit("相对移动"));
+            sub2Button[4]->setText(QString::fromLocal8Bit("M指令"));
+            sub2Button[5]->setText(QString::fromLocal8Bit("F指令"));
             break;
         case 1:
 
             break;
         case 2:
-            sub2Button[0]->setText(QString("开始"));
-            sub2Button[1]->setText(QString("直线终点"));
-            sub2Button[2]->setText(QString("圆弧1点"));
-            sub2Button[3]->setText(QString("圆弧2点"));
-            sub2Button[4]->setText(QString("结束"));
-            sub2Button[5]->setText(QString("保存"));
-            sub2Button[5]->setText(QString("描绘"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("开始"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("直线终点"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("圆弧1点"));
+            sub2Button[3]->setText(QString::fromLocal8Bit("圆弧2点"));
+            sub2Button[4]->setText(QString::fromLocal8Bit("结束"));
+            sub2Button[5]->setText(QString::fromLocal8Bit("保存"));
+            sub2Button[5]->setText(QString::fromLocal8Bit("描绘"));
             break;
         default:
 
@@ -320,20 +320,20 @@ void MainWindow::pressed_subButtonGroup(int i)
         switch(i)
         {
         case 0:
-            sub2Button[0]->setText(QString("拷贝"));
-            sub2Button[1]->setText(QString("删除"));
-            sub2Button[2]->setText(QString("重命名"));
-            sub2Button[3]->setText(QString("保护"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("拷贝"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("删除"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("重命名"));
+            sub2Button[3]->setText(QString::fromLocal8Bit("保护"));
             break;
         case 1:
-            sub2Button[0]->setText(QString("载入"));
-            sub2Button[1]->setText(QString("描绘"));
-            sub2Button[2]->setText(QString("参数设置"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("载入"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("描绘"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("参数设置"));
             break;
         case 2:
-            sub2Button[0]->setText(QString("生成法"));
-            sub2Button[1]->setText(QString("参数曲线"));
-            sub2Button[2]->setText(QString("点信息"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("生成法"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("参数曲线"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("点信息"));
             break;
         default:
             break;
@@ -345,11 +345,11 @@ void MainWindow::pressed_subButtonGroup(int i)
         case 0:
             break;
         case 1:
-            sub2Button[0]->setText(QString("单段"));
-            sub2Button[1]->setText(QString("连续"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("单段"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("连续"));
             break;
         case 2:
-            sub2Button[0]->setText(QString("超程检测"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("超程检测"));
             break;
         default:
             break;
@@ -365,9 +365,9 @@ void MainWindow::pressed_subButtonGroup(int i)
         case 2:
             break;
         case 3:
-            sub2Button[0]->setText(QString("坐标系"));
-            sub2Button[1]->setText(QString("刀具"));
-            sub2Button[2]->setText(QString("补偿"));
+            sub2Button[0]->setText(QString::fromLocal8Bit("坐标系"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("刀具"));
+            sub2Button[2]->setText(QString::fromLocal8Bit("补偿"));
         default:
             break;
         }
@@ -789,14 +789,14 @@ void MainWindow::cB_current_index_changed(QString fileName_Str)
 void MainWindow::errors_handled(int error_type)
 {
     QString error_title,error_content;
-    error_title=QString("发生错误");
-    error_content=QString("未知错误");
+    error_title=QString::fromLocal8Bit("发生错误");
+    error_content=QString::fromLocal8Bit("未知错误");
     switch (error_type) {
     case 1:
-        error_content=QString("选择的目录不存在！");
+        error_content=QString::fromLocal8Bit("选择的目录不存在！");
         break;
     case 2:
-        error_content=QString("选择的txt文件无法打开！");
+        error_content=QString::fromLocal8Bit("选择的txt文件无法打开！");
         break;
     default:
         break;
@@ -824,13 +824,13 @@ void MainWindow::pB_Connection()
     if(ok)
     {
         Label_Connection_Status->setPalette(Palette_Connected);
-        Label_Connection_Status->setText(QString("已连接"));
+        Label_Connection_Status->setText(QString::fromLocal8Bit("已连接"));
         Connection_Status_of_Trio=true;
     }
     else
     {
         Label_Connection_Status->setPalette(Palette_Unconnected);
-        Label_Connection_Status->setText(QString("未连接"));
+        Label_Connection_Status->setText(QString::fromLocal8Bit("未连接"));
         Connection_Status_of_Trio=false;
     }
 }
