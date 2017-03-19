@@ -118,9 +118,9 @@ MainWindow::MainWindow(QWidget *parent) :
     Assist=new thread_assist();
     Assist->moveToThread(THREAD_ASSIST);
 
-
     //Default UI setting
     ui->Stacked_Pages_Main->setCurrentIndex(0);
+    ui->Stacked_Pages_Sub->setCurrentIndex(0);
 
     //Connect the signals and slots
     connect(ButtonGroup_main,SIGNAL(buttonClicked(int)),this,SLOT(pressed_mainButtonGroup(int)));
@@ -152,10 +152,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(trio_MC664,SIGNAL(return_error_of_trio(int,QString,QString,QString)),
             this,SLOT(errors_of_trio_handled(int,QString,QString,QString)));
     connect(this,SIGNAL(call_Trio_connect(bool*)),trio_MC664,SLOT(connect_Trio(bool*)));
+    connect(this,SIGNAL(call_Trio_close()),trio_MC664,SLOT(close_Trio()));
     connect(this,SIGNAL(call_Trio_run_program(bool*,QString)),trio_MC664,SLOT(run_program_of_Trio(bool*,QString)));
     connect(this,SIGNAL(call_Trio_send_txt(bool*,QString,QString)),
             trio_MC664,SLOT(send_txt_to_Trio(bool*,QString,QString)));
     connect(trio_MC664,SIGNAL(return_axis_paras(double*)),this,SLOT(receive_Trio_axis_paras(double*)));
+    connect(this,SIGNAL(call_Trio_run_MANUAL_MODE(bool*)),trio_MC664,SLOT(run_program_MANUAL_MODE(bool*)));
 
     connect(Assist,SIGNAL(return_current_time_str(QString*)),this,SLOT(receive_current_time(QString*)));
     connect(this,SIGNAL(call_start_time_loop()),Assist,SLOT(send_current_Time()));
@@ -165,7 +167,7 @@ MainWindow::MainWindow(QWidget *parent) :
     THREAD_TRIO->start();
     THREAD_ASSIST->start();
 
-    //开始辅助线程，当前时间信号重复发送
+    //Start assistant thread,sending the current time
     emit call_start_time_loop();
 }
 
@@ -191,6 +193,8 @@ MainWindow::~MainWindow()
     THREAD_CCD->wait();
     delete THREAD_CCD;
 
+    emit call_Trio_close();
+    qSleep(100);
     delete trio_MC664;
     THREAD_TRIO->quit();
     THREAD_TRIO->wait();
@@ -213,6 +217,8 @@ void MainWindow::qSleep(int ms)
 //*******************About Buttons*******************//
 void MainWindow::pressed_mainButtonGroup(int i)
 {
+    bool ok(false);
+
     for(int j=0;j<=5;j++)
     {
         button_unpressed(mainButton[j]);
@@ -230,6 +236,7 @@ void MainWindow::pressed_mainButtonGroup(int i)
         subButton[0]->setText(QString::fromLocal8Bit("准备"));
         subButton[1]->setText(QString::fromLocal8Bit("MDI"));
         subButton[2]->setText(QString::fromLocal8Bit("示教"));
+        emit call_Trio_run_MANUAL_MODE(&ok);
         break;
     case 2:
         subButton[0]->setText(QString::fromLocal8Bit("文件"));
@@ -689,7 +696,7 @@ void MainWindow::txtfile_new_built()
 
 void MainWindow::txtfile_readin()
 {
-    QString fileDir=QFileDialog::getExistingDirectory(this,QString("请选择目录"),QString("目录为"));
+    QString fileDir=QFileDialog::getExistingDirectory(this,QString::fromLocal8Bit("请选择目录"),QString::fromLocal8Bit("目录为"));
     emit cB_Txt_Changed(fileDir);
 }
 
@@ -820,7 +827,7 @@ void MainWindow::pB_Connection()
 {
     bool ok(false);
     emit call_Trio_connect(&ok);
-    qSleep(200);
+    qSleep(500);
     if(ok)
     {
         Label_Connection_Status->setPalette(Palette_Connected);

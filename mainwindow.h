@@ -94,13 +94,16 @@ signals:
 
     //for trio thread
     void call_Trio_connect(bool*);
+    void call_Trio_close();
     void call_Trio_send_txt(bool*,const QString,const QString);
     void call_Trio_run_program(bool*,QString);
     void call_Trio_return_axis_paras(bool*,double*);
+    void call_Trio_run_MANUAL_MODE(bool*);
 
     //for assist thread
     void call_start_time_loop();
     void call_stop_time_loop();
+
 };
 
 #endif // MAINWINDOW_H

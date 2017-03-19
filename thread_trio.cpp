@@ -2,6 +2,9 @@
 #include <QTime>
 #include <QCoreApplication>
 #include <QDebug>
+#define IP_Simulator "127.0.0.1"
+#define IP_MC664 "192.168.0.250"
+
 void thread_Trio::qSleep(int ms)
 {
     common::qSleep(ms);
@@ -17,18 +20,30 @@ thread_Trio::thread_Trio(QObject *parent) : QObject(parent)
 
 thread_Trio::~thread_Trio()
 {
+    trio->Run("END");
+    qSleep(300);
+
     delete trio;
 }
 
 void thread_Trio::connect_Trio(bool *ok)
 {
-    trio->SetHost("127.0.0.1");
+    trio->SetHost(IP_MC664);
     if(trio->Open(2,0))
     {
         *ok=true;
+        trio->Op(QVariant(32),QVariant(1));
     }else
     {
         *ok=false;
+    }
+}
+
+void thread_Trio::close_Trio()
+{
+    if (trio->IsOpen(2))
+    {
+        trio->Close();
     }
 }
 
@@ -79,11 +94,24 @@ void thread_Trio::run_program_of_Trio(bool *ok, QString program_name)
     }while((MTYPE_x!=0)|(MTYPE_y!=0));
 }
 
-void thread_Trio::grab_axis_paras(bool* ok, double* paras_array)
+void thread_Trio::run_program_MANUAL_MODE(bool *ok)
 {
-    if(trio->GetAxisVariable(QString("MPOS"),1,*(paras_array+1)))
+    if(trio->Run("MANUAL_MODE",5))
     {
         *ok=true;
+    }else
+    {
+        *ok=false;
+    }
+}
+
+void thread_Trio::grab_axis_paras(bool* ok, double* paras_array)
+{
+    *ok=true;
+
+    if(trio->GetAxisVariable(QString("MPOS"),1,*(paras_array+1)))
+    {
+
     }else
     {
         *ok=false;
@@ -91,7 +119,7 @@ void thread_Trio::grab_axis_paras(bool* ok, double* paras_array)
 
     if(trio->GetAxisVariable(QString("MPOS"),3,*(paras_array+3)))
     {
-        *ok=true;
+
     }else
     {
         *ok=false;
