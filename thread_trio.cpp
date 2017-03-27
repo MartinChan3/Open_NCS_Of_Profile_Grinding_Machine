@@ -20,7 +20,10 @@ thread_Trio::thread_Trio(QObject *parent) : QObject(parent)
 
 thread_Trio::~thread_Trio()
 {
-    trio->Run("END");
+    if (trio->IsOpen(2))
+    {
+        trio->Run("END");
+    }
     qSleep(300);
 
     delete trio;
@@ -50,6 +53,11 @@ void thread_Trio::close_Trio()
 void thread_Trio::send_txt_to_Trio(bool *ok, const QString source_file_path,
                                    const QString destination_file_path)
 {
+    if (!trio->IsOpen(2))
+    {
+        return;
+    }
+
     if(trio->TextFileLoader(source_file_path,0,destination_file_path,0,0,0,0,0,0))
     {
         *ok=true;
@@ -62,6 +70,11 @@ void thread_Trio::send_txt_to_Trio(bool *ok, const QString source_file_path,
 
 void thread_Trio::run_program_of_Trio(bool *ok, QString program_name)
 {
+    if (!trio->IsOpen(2))
+    {
+        return;
+    }
+
     if(trio->Run(program_name))
     {
         *ok=true;
@@ -96,6 +109,11 @@ void thread_Trio::run_program_of_Trio(bool *ok, QString program_name)
 
 void thread_Trio::run_program_MANUAL_MODE(bool *ok)
 {
+    if (!trio->IsOpen(2))
+    {
+        return;
+    }
+
     if(trio->Run("MANUAL_MODE",5))
     {
         *ok=true;
@@ -107,6 +125,11 @@ void thread_Trio::run_program_MANUAL_MODE(bool *ok)
 
 void thread_Trio::grab_axis_paras(bool* ok, double* paras_array)
 {
+    if (!trio->IsOpen(2))
+    {
+        return;
+    }
+
     *ok=true;
 
     if(trio->GetAxisVariable(QString("MPOS"),1,*(paras_array+1)))

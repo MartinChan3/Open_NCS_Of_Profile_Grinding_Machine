@@ -209,6 +209,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    Assist->receive_time_loop_stop_flag();
+}
+
 void MainWindow::qSleep(int ms)
 {
     common::qSleep(ms);
