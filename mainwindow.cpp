@@ -171,11 +171,6 @@ MainWindow::MainWindow(QWidget *parent) :
     emit call_start_time_loop();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event){
-    emit stop_ccd();
-    Assist->receive_time_loop_stop_flag();
-}
-
 MainWindow::~MainWindow()
 {
     emit stop_ccd();
@@ -206,7 +201,6 @@ MainWindow::~MainWindow()
     delete THREAD_TRIO;
 
     emit call_stop_time_loop();
-    Sleep(10);
     delete Assist;
     THREAD_ASSIST->quit();
     THREAD_ASSIST->wait();

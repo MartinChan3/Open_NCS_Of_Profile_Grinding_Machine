@@ -28,8 +28,7 @@ thread_Trio::~thread_Trio()
 
 void thread_Trio::connect_Trio(bool *ok)
 {
-//    trio->SetHost(IP_MC664);
-    trio->SetHost(IP_Simulator);
+    trio->SetHost(IP_MC664);
     if(trio->Open(2,0))
     {
         *ok=true;
