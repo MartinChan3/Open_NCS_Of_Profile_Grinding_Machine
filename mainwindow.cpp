@@ -256,9 +256,9 @@ void MainWindow::pressed_mainButtonGroup(int i)
         subButton[3]->setText(QString::fromLocal8Bit("View"));
         break;
     case 5:
-
+        subButton[0]->setText(QString::fromLocal8Bit("参数设定"));
+        subButton[1]->setText(QString::fromLocal8Bit("诊断"));
         break;
-
     default:
         clear_button_text(ALL_SUB);
         break;
@@ -283,9 +283,10 @@ void MainWindow::pressed_subButtonGroup(int i)
         {
         case 0:
             sub2Button[0]->setText(QString::fromLocal8Bit("刀具库"));
-            sub2Button[1]->setText(QString::fromLocal8Bit("上偏差"));
-            sub2Button[2]->setText(QString::fromLocal8Bit("下偏差"));
-            sub2Button[3]->setText(QString::fromLocal8Bit("补偿量"));
+            sub2Button[1]->setText(QString::fromLocal8Bit("补偿量"));
+//            sub2Button[1]->setText(QString::fromLocal8Bit("上偏差"));
+//            sub2Button[2]->setText(QString::fromLocal8Bit("下偏差"));
+//            sub2Button[3]->setText(QString::fromLocal8Bit("补偿量"));
             break;
         case 1:
             sub2Button[0]->setText(QString::fromLocal8Bit("零点偏置"));
@@ -307,7 +308,7 @@ void MainWindow::pressed_subButtonGroup(int i)
             sub2Button[5]->setText(QString::fromLocal8Bit("F指令"));
             break;
         case 1:
-
+            editStack->setCurrentIndex(12);
             break;
         case 2:
             sub2Button[0]->setText(QString::fromLocal8Bit("开始"));
@@ -319,7 +320,6 @@ void MainWindow::pressed_subButtonGroup(int i)
             sub2Button[5]->setText(QString::fromLocal8Bit("描绘"));
             break;
         default:
-
             break;
         }
         break;
@@ -366,8 +366,10 @@ void MainWindow::pressed_subButtonGroup(int i)
         switch(i)
         {
         case 0:
+            mainStack->setCurrentIndex(4);
             break;
         case 1:
+            mainStack->setCurrentIndex(3);
             break;
         case 2:
             break;
@@ -403,14 +405,14 @@ void MainWindow::pressed_sub2ButtonGroup(int i)
                 editStack->setCurrentIndex(1);
                 break;
             case 1:
-                editStack->setCurrentIndex(2);
-                break;
-            case 2:
-                editStack->setCurrentIndex(3);
-                break;
-            case 3:
                 editStack->setCurrentIndex(4);
                 break;
+//            case 2:
+//                editStack->setCurrentIndex(3);
+//                break;
+//            case 3:
+//                editStack->setCurrentIndex(4);
+//                break;
             default:
                 break;
             }
@@ -469,13 +471,17 @@ void MainWindow::pressed_sub2ButtonGroup(int i)
         case 0:
             switch (i) {
             case 0:
+                editStack->setCurrentIndex(6);
+                break;
+            case 1:
+                editStack->setCurrentIndex(7);
                 break;
             default:
                 break;
             }
             break;
         case 1:
-            switch (i) {
+            switch (i) {           
             case 0:
                 break;
             default:
@@ -864,7 +870,7 @@ void MainWindow::receive_captured_image(uchar* img_data)
 {
     QImage img=QImage(img_data,2448,2058,QImage::Format_Indexed8);
     ui->Label_Img->setPixmap(QPixmap::fromImage(img));
-    qDebug()<<"A img received";
+ //   qDebug()<<"A img received";
     delete []img_data;
 }
 

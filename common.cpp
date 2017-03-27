@@ -15,5 +15,4 @@ void common::qSleep(const int ms)
         {
             QCoreApplication::processEvents();
         }
-//     Sleep(ms);
 }
