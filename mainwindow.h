@@ -42,6 +42,7 @@ private:
     QDir dir_of_txt;
     bool Connection_Status_of_Trio;
 
+    void closeEvent(QCloseEvent *event);
     void qSleep(int ms);
     void button_pressed(QPushButton *button);
     void button_unpressed(QPushButton *button);
