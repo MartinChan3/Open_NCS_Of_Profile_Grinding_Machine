@@ -16,7 +16,7 @@ public:
 signals:
     void return_current_time_str(QString*);
 public slots:
-   void send_current_Time();
+   //void send_current_Time();
    void receive_time_loop_stop_flag();
 };
 

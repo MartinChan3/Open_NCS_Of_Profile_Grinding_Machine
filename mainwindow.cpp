@@ -13,6 +13,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QImage>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/machine_tool_ico.ico"));
+
+    //Initialize the timer
+    timer=new QTimer(this);
+    timer->start(1000);
 
     //Initialize the widgets of UI
     mainButton[0]=ui->pB_data;
@@ -123,6 +128,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->Stacked_Pages_Sub->setCurrentIndex(0);
 
     //Connect the signals and slots
+    connect(timer,SIGNAL(timeout()),this,SLOT(current_time_text_set()));
+
     connect(ButtonGroup_main,SIGNAL(buttonClicked(int)),this,SLOT(pressed_mainButtonGroup(int)));
     connect(ButtonGroup_sub,SIGNAL(buttonClicked(int)),this,SLOT(pressed_subButtonGroup(int)));
     connect(ButtonGroup_sub2,SIGNAL(buttonClicked(int)),this,SLOT(pressed_sub2ButtonGroup(int)));
@@ -159,8 +166,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(trio_MC664,SIGNAL(return_axis_paras(double*)),this,SLOT(receive_Trio_axis_paras(double*)));
     connect(this,SIGNAL(call_Trio_run_MANUAL_MODE(bool*)),trio_MC664,SLOT(run_program_MANUAL_MODE(bool*)));
 
-    connect(Assist,SIGNAL(return_current_time_str(QString*)),this,SLOT(receive_current_time(QString*)));
-    connect(this,SIGNAL(call_start_time_loop()),Assist,SLOT(send_current_Time()));
+    //connect(Assist,SIGNAL(return_current_time_str(QString*)),this,SLOT(receive_current_time(QString*)));
+    //connect(this,SIGNAL(call_start_time_loop()),Assist,SLOT(send_current_Time()));
     connect(this,SIGNAL(call_stop_time_loop()),Assist,SLOT(receive_time_loop_stop_flag()));
 
     THREAD_CCD->start();
@@ -171,9 +178,21 @@ MainWindow::MainWindow(QWidget *parent) :
     emit call_start_time_loop();
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(timer->isActive())
+    {
+        timer->stop();
+    }
+
+    Assist->receive_time_loop_stop_flag();
+}
+
 MainWindow::~MainWindow()
 {
     emit stop_ccd();
+
+    delete timer;
 
     for(int i=0;i<=5;i++)
     {
@@ -209,10 +228,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    Assist->receive_time_loop_stop_flag();
-}
+
 
 void MainWindow::qSleep(int ms)
 {
@@ -698,6 +714,15 @@ void MainWindow::clear_button_text(BUTTON_GROUP_TYPE group_type)
         button_unpressed(sub2Button[7]);
         break;
     }
+}
+
+void MainWindow::current_time_text_set()
+{
+    QString str;
+    QDateTime current_one=QDateTime::currentDateTime();
+    str=current_one.toString(QString("yyyy MM dd hh:mm:ss"));
+
+    ui->Label_date->setText(str);
 }
 
 void MainWindow::txtfile_new_built()

@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QDir>
 #include <QThread>
+#include <QTimer>
 #include "trioactivex.h"
 #include "thread_ccd.h"
 #include "thread_trio.h"
@@ -33,6 +34,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QTimer *timer;
     QPushButton *mainButton[6],*helpButton,*subButton[5],*sub2Button[8];
     QStackedWidget *mainStack,*editStack;
     QButtonGroup *ButtonGroup_main,*ButtonGroup_sub,*ButtonGroup_sub2;
@@ -55,6 +57,8 @@ private:
     QThread *THREAD_CCD,*THREAD_TRIO,*THREAD_ASSIST;
 
 private slots:
+    void current_time_text_set();
+
     void errors_handled(int);
     void errors_of_trio_handled(int, QString, QString, QString);
 
